@@ -9,8 +9,14 @@ $deviceInfo = [PSCustomObject]@{
     SerialNumber = $bios.SerialNumber
 }
 
-# Export to CSV
+# Define output path
 $csvPath = "$PSScriptRoot\DeviceInfo.csv"
-$deviceInfo | Export-Csv -Path $csvPath -NoTypeInformation
 
-Write-Output "Device information exported to $csvPath"
+# Export to CSV without headers
+$deviceInfo |
+    ConvertTo-Csv -NoTypeInformation |
+    Select-Object -Skip 1 |
+    Set-Content -Path $csvPath
+
+# Green success message
+Write-Host "Device information exported (without headers) to $csvPath" -ForegroundColor Green
